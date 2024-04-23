@@ -11,15 +11,19 @@ const comparePassowrd = async (password, hashedPassword) => {
   return await bcrypt.compare(password, hashedPassword);
 };
 
-const generatetoken = (payload) => {
-  const token = jwt.sign({ payload }, process.env.JWT_SECRET_KEY, {
+const generatetoken = (payload, secret) => {
+  const token = jwt.sign({ payload }, secret, {
     expiresIn: "7d",
   });
   return token;
 };
 
-const verifyToken = (token) => {
-  return jwt.verify(token, process.env.JWT_SECRET_KEY);
+const verifyToken = (token, secret) => {
+  return jwt.verify(token, secret);
 };
 
-export { encryptPassword, comparePassowrd, generatetoken, verifyToken };
+function generateOtp() {
+  return Math.floor(Math.random() * 900000) + 100000;
+}
+
+export { encryptPassword, comparePassowrd, generatetoken, verifyToken, generateOtp };
