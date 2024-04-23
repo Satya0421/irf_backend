@@ -16,13 +16,15 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(morgan("dev"));
 server.use(cookieParser());
-server.set('trust proxy', 1) 
-server.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  // cookie: { secure: true }
-}))
+server.set("trust proxy", 1);
+server.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    // cookie: { secure: true }
+  })
+);
 
 //database connection
 connectDB();
