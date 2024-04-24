@@ -46,7 +46,6 @@ const sendOtp = asynchHandler(async (req, res, next) => {
   });
 });
 
-
 //user verify otp
 //@route POST api/auth/verify
 const verifyOtp = asynchHandler(async (req, res, next) => {
@@ -112,6 +111,7 @@ const registerUser = asynchHandler(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     message: "user registred successfully",
+    isVerifiedUser: user?.isVerifiedUser,
   });
 });
 
