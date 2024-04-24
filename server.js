@@ -18,15 +18,6 @@ server.use(express.urlencoded({ extended: true }));
 server.use(morgan("dev"));
 server.use(cookieParser());
 server.use(cors());
-server.set("trust proxy", 1);
-server.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    // cookie: { secure: true }
-  })
-);
 
 //database connection
 connectDB();

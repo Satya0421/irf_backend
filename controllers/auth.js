@@ -2,6 +2,7 @@ import asynchHandler from "express-async-handler";
 import * as userServices from "../services/user.js";
 import * as authService from "../services/auth.js";
 import AppError from "../utils/appError.js";
+import otpSender from "../utils/api.js";
 
 //send otp to user
 //@route POST api/auth/send-otp
@@ -11,21 +12,39 @@ const sendOtp = asynchHandler(async (req, res, next) => {
     throw new AppError("please provide a phone number", 400);
   }
   const isUserExist = await userServices.findUserByPhone(phoneNumber);
-  console.log("User exist");
-  req.session.phoneNumber = phoneNumber;
   if (isUserExist && !isUserExist?.isProfileCompleted) {
     await userServices.deleteProfileNotCompletedUser(phoneNumber);
   }
+  const otp = authService.generateOtp();
+  const data = {
+    variables_values: otp,
+    route: "otp",
+    numbers: phoneNumber,
+  };
   if (isUserExist && isUserExist?.isProfileCompleted) {
-    const otp = authService.generateOtp();
     await userServices.updateOtp(phoneNumber, otp);
+    const response = await otpSender(data);
+    console.log(response, "response");
+    if (!response?.return) {
+      return res.status(400).json({
+        status: "failed",
+        message: "Failed to send OTP.",
+      });
+    }
     return res.status(200).json({
       status: "success",
-      message: "otp changed successfully",
+      message: "otp sent successfully",
     });
   }
-  const otp = authService.generateOtp();
   await userServices.registerPhone(phoneNumber, otp);
+  const response = await otpSender(data);
+  console.log(response, "response");
+  if (!response?.return) {
+    return res.status(400).json({
+      status: "failed",
+      message: "Failed to send OTP.",
+    });
+  }
   res.status(200).json({
     status: "success",
     message: "otp sent successfully",
@@ -35,7 +54,7 @@ const sendOtp = asynchHandler(async (req, res, next) => {
 //user verify otp
 //@route POST api/auth/verify
 const verifyOtp = asynchHandler(async (req, res, next) => {
-  const { otp ,phoneNumber} = req.body;
+  const { otp, phoneNumber } = req.body;
   const user = await userServices.findUserByPhone(phoneNumber);
   if (!user) {
     throw new AppError("user not found", 404);
