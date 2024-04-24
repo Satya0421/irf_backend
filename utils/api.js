@@ -1,4 +1,5 @@
 import axios from "axios";
+import AppError from "./appError.js";
 
 //Fas2SmsApi
 
@@ -11,7 +12,8 @@ async function otpSender(data) {
     });
     return response.data;
   } catch (error) {
-    console.log("error otp sending : ", error);
+    console.log("error otp sending : ", error?.response?.data?.message);
+    throw new AppError(`${error?.response?.data?.message || "otp senting error"}`, 500);
   }
 }
 export default otpSender;
