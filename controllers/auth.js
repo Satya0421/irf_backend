@@ -22,7 +22,6 @@ const sendOtp = asynchHandler(async (req, res, next) => {
     numbers: phoneNumber,
   };
   if (isUserExist && isUserExist?.isProfileCompleted) {
-    await userServices.updateOtp(phoneNumber, otp);
     const response = await otpSender(data);
     console.log(response, "response");
     if (!response?.return) {
@@ -31,12 +30,12 @@ const sendOtp = asynchHandler(async (req, res, next) => {
         message: "Failed to send OTP.",
       });
     }
+    await userServices.updateOtp(phoneNumber, otp);
     return res.status(200).json({
       status: "success",
       message: "otp sent successfully",
     });
   }
-  await userServices.registerPhone(phoneNumber, otp);
   const response = await otpSender(data);
   console.log(response, "response");
   if (!response?.return) {
@@ -45,6 +44,7 @@ const sendOtp = asynchHandler(async (req, res, next) => {
       message: "Failed to send OTP.",
     });
   }
+  await userServices.registerPhone(phoneNumber, otp);
   res.status(200).json({
     status: "success",
     message: "otp sent successfully",
