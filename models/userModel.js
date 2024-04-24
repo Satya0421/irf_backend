@@ -11,6 +11,7 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
+      sparse: true,
     },
     gender: {
       type: String,
@@ -37,6 +38,10 @@ const userSchema = new Schema(
       default: false,
     },
     isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    isUserVerified: {
       type: Boolean,
       default: false,
     },

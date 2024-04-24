@@ -19,6 +19,13 @@ const updateOtp = async (phoneNumber, otp) =>
 
 const findUserByPhoneAndOtp = async (phoneNumber, otp) => await User.findOne({ phoneNumber, otp });
 
+const updateUserStatus = async (phoneNumber, otp) =>
+  await User.findOneAndUpdate(
+    { phoneNumber, otp },
+    { $set: { otp: "undefined", isUserVerified: true } },
+    { new: true }
+  );
+
 export {
   registerPhone,
   findUserByPhone,
@@ -28,4 +35,5 @@ export {
   deleteProfileNotCompletedUser,
   updateOtp,
   findUserByPhoneAndOtp,
+  updateUserStatus,
 };

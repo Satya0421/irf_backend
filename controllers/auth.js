@@ -7,10 +7,12 @@ import AppError from "../utils/appError.js";
 //@route POST api/auth/send-otp
 const sendOtp = asynchHandler(async (req, res, next) => {
   const { phoneNumber } = req.body;
+  if (!phoneNumber) {
+    throw new AppError("please provide a phone number", 400);
+  }
   const isUserExist = await userServices.findUserByPhone(phoneNumber);
-  console.log(isUserExist);
+  console.log("User exist");
   req.session.phoneNumber = phoneNumber;
-  console.log(req.session.phoneNumber, "phone");
   if (isUserExist && !isUserExist?.isProfileCompleted) {
     await userServices.deleteProfileNotCompletedUser(phoneNumber);
   }
@@ -23,8 +25,7 @@ const sendOtp = asynchHandler(async (req, res, next) => {
     });
   }
   const otp = authService.generateOtp();
-  const user = await userServices.registerPhone(phoneNumber, otp);
-
+  await userServices.registerPhone(phoneNumber, otp);
   res.status(200).json({
     status: "success",
     message: "otp sent successfully",
@@ -34,9 +35,7 @@ const sendOtp = asynchHandler(async (req, res, next) => {
 //user verify otp
 //@route POST api/auth/verify
 const verifyOtp = asynchHandler(async (req, res, next) => {
-  const phoneNumber = req.session.phoneNumber;
-  console.log(phoneNumber);
-  const { otp } = req.body;
+  const { otp ,phoneNumber} = req.body;
   const user = await userServices.findUserByPhone(phoneNumber);
   if (!user) {
     throw new AppError("user not found", 404);
@@ -44,10 +43,13 @@ const verifyOtp = asynchHandler(async (req, res, next) => {
   if (user?.otp !== otp) {
     throw new AppError("invalid otp", 400);
   }
+
+  await userServices.updateUserStatus(phoneNumber, otp);
   res.status(200).json({
     status: "success",
     message: "user verified",
     isNewUser: !user?.isProfileCompleted,
+    isUserBlocked: user?.isBlocked,
   });
 });
 
@@ -59,8 +61,11 @@ const registerUser = asynchHandler(async (req, res, next) => {
   if (!isPhoneNumberIsExist) {
     throw new AppError("phone number is not found", 404);
   }
-  if (isPhoneNumberIsExist && isPhoneNumberIsExist?.isProfileCompleted) {
+  if (isPhoneNumberIsExist?.isProfileCompleted) {
     throw new AppError("profile is  already completed ", 409);
+  }
+  if (!isPhoneNumberIsExist.isUserVerified) {
+    throw new AppError("user is Not Verified", 403);
   }
   const isEmailIsExist = await userServices.findUserByEmail(email);
   if (isEmailIsExist) {
