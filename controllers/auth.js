@@ -83,8 +83,8 @@ const registerUser = asynchHandler(async (req, res, next) => {
   if (isPhoneNumberIsExist?.isProfileCompleted) {
     throw new AppError("profile is  already completed ", 409);
   }
-  if (!isPhoneNumberIsExist.isUserVerified) {
-    throw new AppError("user is Not Verified", 403);
+  if (!isPhoneNumberIsExist.isPhoneNumberVerified) {
+    throw new AppError("user phone number is not Verified", 403);
   }
   const isEmailIsExist = await userServices.findUserByEmail(email);
   if (isEmailIsExist) {

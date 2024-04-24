@@ -22,7 +22,7 @@ const findUserByPhoneAndOtp = async (phoneNumber, otp) => await User.findOne({ p
 const updateUserStatus = async (phoneNumber, otp) =>
   await User.findOneAndUpdate(
     { phoneNumber, otp },
-    { $set: { otp: "undefined", isUserVerified: true } },
+    { $set: { otp: "undefined", isPhoneNumberVerified: true } },
     { new: true }
   );
 

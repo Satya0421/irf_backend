@@ -6,6 +6,10 @@ const userSchema = new Schema(
       type: String,
       unique: true,
     },
+    isPhoneNumberVerified: {
+      type: Boolean,
+      default: false,
+    },
     fullName: {
       type: String,
     },
@@ -41,7 +45,7 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    isUserVerified: {
+    isVerifiedUser: {
       type: Boolean,
       default: false,
     },
