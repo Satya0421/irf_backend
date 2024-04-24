@@ -46,6 +46,7 @@ const sendOtp = asynchHandler(async (req, res, next) => {
   });
 });
 
+
 //user verify otp
 //@route POST api/auth/verify
 const verifyOtp = asynchHandler(async (req, res, next) => {
