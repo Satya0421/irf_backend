@@ -21,6 +21,8 @@ const sendOtp = asynchHandler(async (req, res, next) => {
     route: "otp",
     numbers: phoneNumber,
   };
+  console.log(data);
+  console.log(otp, "otp");
   if (isUserExist && isUserExist?.isProfileCompleted) {
     const response = await otpSender(data);
     console.log(response, "response");
