@@ -16,14 +16,8 @@ const sendOtp = asynchHandler(async (req, res, next) => {
     await userServices.deleteProfileNotCompletedUser(phoneNumber);
   }
   const otp = authService.generateOtp();
-  const data = {
-    variables_values: otp,
-    route: "otp",
-    numbers: phoneNumber,
-  };
-  console.log(data);
   if (isUserExist && isUserExist?.isProfileCompleted) {
-    const response = await otpSender(data);
+    const response = await otpSender({ variables_values: otp, route: "otp", numbers: phoneNumber });
     console.log(response, "response");
     if (!response?.return) {
       return res.status(400).json({
@@ -37,7 +31,7 @@ const sendOtp = asynchHandler(async (req, res, next) => {
       message: "otp sent successfully",
     });
   }
-  const response = await otpSender(data);
+  const response = await otpSender({ variables_values: otp, route: "otp", numbers: phoneNumber });
   console.log(response, "response");
   if (!response?.return) {
     return res.status(400).json({
