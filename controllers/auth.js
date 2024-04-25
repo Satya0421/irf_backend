@@ -58,7 +58,7 @@ const verifyOtp = asynchHandler(async (req, res, next) => {
     throw new AppError("invalid otp", 400);
   }
   if (user?.otpExpires < new Date()) {
-    throw new AppError("the otp  has expired. please try again.",400);
+    throw new AppError("the otp  has expired. please try again.", 400);
   }
 
   await userServices.updateUserStatus(phoneNumber, otp);
@@ -67,6 +67,7 @@ const verifyOtp = asynchHandler(async (req, res, next) => {
     message: "user verified",
     isUserNew: !user?.isProfileCompleted,
     isUserBlocked: user?.isBlocked,
+    isUserVerified: user?.isVerifiedUser,
   });
 });
 
@@ -115,6 +116,8 @@ const registerUser = asynchHandler(async (req, res, next) => {
     status: "success",
     message: "user registred successfully",
     isUserVerified: user?.isVerifiedUser,
+    isUserBlocked: user?.isBlocked,
+    isUserNew: !user?.isProfileCompleted,
   });
 });
 
