@@ -33,6 +33,10 @@ const userSchema = new Schema(
     otp: {
       type: String,
     },
+    otpExpires: {
+      type: Date,
+      default: Date.now() + 60000,
+    },
     isAdmin: {
       type: Boolean,
       default: false,
