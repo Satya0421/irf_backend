@@ -114,7 +114,7 @@ const registerUser = asynchHandler(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     message: "user registred successfully",
-    isVerifiedUser: user?.isVerifiedUser,
+    isUserVerified: user?.isVerifiedUser,
   });
 });
 
