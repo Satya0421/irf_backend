@@ -58,7 +58,7 @@ const verifyOtp = asynchHandler(async (req, res, next) => {
     throw new AppError("invalid otp", 400);
   }
   if (user?.otpExpires < new Date()) {
-    throw new AppError("the otp provided  has expired. Please try again.");
+    throw new AppError("the otp  has expired. please try again.");
   }
 
   await userServices.updateUserStatus(phoneNumber, otp);

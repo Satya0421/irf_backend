@@ -35,7 +35,7 @@ const userSchema = new Schema(
     },
     otpExpires: {
       type: Date,
-      default: Date.now() + 60000,
+      default: Date.now() + 72000,
     },
     isAdmin: {
       type: Boolean,
