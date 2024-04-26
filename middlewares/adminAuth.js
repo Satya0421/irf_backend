@@ -12,15 +12,14 @@ const adminAuth = (req, res, next) => {
   try {
     const token_secret = process.env.JWT_ADMIN_SECRET_KEY;
     const decoded = verifyToken(token, token_secret);
-    console.log(decoded, "decode");
     if (decoded?.payload?.role !== "admin") {
-      return next(new AppError("unauthorized User"), 401);
+      return next(new AppError("unauthorized user"), 401);
     }
-    req.adminId = payload.adminId;
+    req.adminId = decoded?.payload.adminId;
     next();
   } catch (error) {
-    console.log(error);
-    throw new AppError("unauthorized User", 401);
+    console.log(error?.message);
+    throw new AppError(error?.message || "unauthorized user", 401);
   }
 };
 export default adminAuth;

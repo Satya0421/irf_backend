@@ -5,10 +5,11 @@ import colors from "colors";
 import connectDB from "./config/db.js";
 import AppError from "./utils/appError.js";
 import errorHandler from "./middlewares/errorHandler.js";
-import authRoutes from "./routes/auth.js";
 import cookieParser from "cookie-parser";
-import session from "express-session";
 import cors from "cors";
+import authRoutes from "./routes/auth.js";
+import adminRoutes from "./routes/admin.js";
+
 dotenv.config();
 
 const server = express();
@@ -24,6 +25,7 @@ connectDB();
 
 //routes setup
 server.use("/api/auth", authRoutes);
+server.use("/api/admin", adminRoutes);
 
 //catch not founded routes and forwards to error handler
 server.all("*", (req, res, next) => {

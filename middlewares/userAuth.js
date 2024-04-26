@@ -20,8 +20,8 @@ const userAuth = (req, res, next) => {
     req.userId = payload.userId;
     next();
   } catch (error) {
-    console.log(error);
-    throw new AppError("unauthorized user", 401);
+    console.log(error?.message);
+    throw new AppError(error?.message || "unauthorized user", 401);
   }
 };
 export default userAuth;
