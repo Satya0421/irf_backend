@@ -1,12 +1,13 @@
-import asynchHandler from "express-async-handler";
+import asyncHandler from "express-async-handler";
 import * as userServices from "../services/user.js";
 import * as authService from "../services/auth.js";
+import * as adminService from "../services/admin.js";
 import AppError from "../utils/appError.js";
 import otpSender from "../utils/api.js";
 
 //send otp to user
 //@route POST api/auth/send-otp
-const sendOtp = asynchHandler(async (req, res, next) => {
+const sendOtp = asyncHandler(async (req, res, next) => {
   const { phoneNumber } = req.body;
   if (!phoneNumber) {
     throw new AppError("please provide a phone number", 400);
@@ -48,7 +49,7 @@ const sendOtp = asynchHandler(async (req, res, next) => {
 
 //user verify otp
 //@route POST api/auth/verify
-const verifyOtp = asynchHandler(async (req, res, next) => {
+const verifyOtp = asyncHandler(async (req, res, next) => {
   const { otp, phoneNumber } = req.body;
   const user = await userServices.findUserByPhone(phoneNumber);
   if (!user) {
@@ -57,20 +58,27 @@ const verifyOtp = asynchHandler(async (req, res, next) => {
   if (user?.otp !== otp) {
     throw new AppError("invalid otp", 400);
   }
- 
+
   await userServices.updateUserStatus(phoneNumber, otp);
+  const token_secret = process.env.JWT_USER_SECRET_KEY;
+  const accessToken = authService.generatetoken(
+    { userId: user.id, role: "user" },
+    token_secret,
+    "7d"
+  );
   res.status(200).json({
     status: "success",
     message: "user verified",
     isUserNew: !user?.isProfileCompleted,
     isUserBlocked: user?.isBlocked,
     isUserVerified: user?.isVerifiedUser,
+    token: accessToken,
   });
 });
 
 //user register controller
 //@route POST api/auth/register
-const registerUser = asynchHandler(async (req, res, next) => {
+const registerUser = asyncHandler(async (req, res, next) => {
   let { phoneNumber, fullName, email, gender, dateOfBirth, panNumber, address } = req.body;
   const isPhoneNumberIsExist = await userServices.findUserByPhone(phoneNumber);
   if (!isPhoneNumberIsExist) {
@@ -100,22 +108,50 @@ const registerUser = asynchHandler(async (req, res, next) => {
     address,
     isProfileCompleted: true,
   });
-  const token_secret = process.env.JWT_SECRET_KEY;
+  const token_secret = process.env.JWT_USER_SECRET_KEY;
   const accessToken = authService.generatetoken(
-    { userId: user.id, role: "user", phoneNumber: user.phoneNumber },
-    token_secret
+    { userId: user.id, role: "user" },
+    token_secret,
+    "7d"
   );
   res.cookie("refresh_token", accessToken, {
     httpOnly: true, // Prevent client-side access
     secure: true, // Only send over HTTPS (production)
   });
-  res.status(201).json({
+  res.status(200).json({
     status: "success",
     message: "user registred successfully",
     isUserVerified: user?.isVerifiedUser,
     isUserBlocked: user?.isBlocked,
     isUserNew: !user?.isProfileCompleted,
+    token: accessToken,
   });
 });
 
-export { registerUser, sendOtp, verifyOtp };
+//admin login section
+//@route POST api/auth/admin/login
+
+const adminLogin = asyncHandler(async (req, res, next) => {
+  let { email, password } = req.body;
+  const isEmailExist = await adminService.isAdminEmailExist(email);
+  if (!isEmailExist) {
+    throw new AppError("invalid email", 401);
+  }
+  const isValidUser = await authService.comparePassowrd(password, isEmailExist.password);
+  if (!isValidUser) {
+    throw new AppError("invalid password", 401);
+  }
+  const token_secret = process.env.JWT_ADMIN_SECRET_KEY;
+  const access_token = authService.generatetoken(
+    { adminId: isEmailExist._id, role: "admin" },
+    token_secret,
+    "15m"
+  );
+  res.status(200).json({
+    status: "success",
+    message: "user loged in successfully",
+    token: access_token,
+  });
+});
+
+export { registerUser, sendOtp, verifyOtp, adminLogin };

@@ -62,4 +62,18 @@ const userRegisterSchema = z
     address: z.string({ required_error: "Please provide address." }).trim(),
   })
   .strict();
-export { sendOtpSchema, otpSchema, userRegisterSchema };
+
+const adminLoginSchema = z.object({
+  email: z
+    .string({ required_error: "Please provide email address" })
+    .trim()
+    .toLowerCase()
+    .email({ message: "Please provide a valid email addess." }),
+  password: z
+    .string({ required_error: "Please provide password" })
+    .trim()
+    .regex(/^\S+$/, "Password cannot contain whitespace characters")
+    .min(6, { message: "password should be atleast 6 characters" })
+    .max(15, { message: "password should not be more than 15 characters" }),
+});
+export { sendOtpSchema, otpSchema, userRegisterSchema, adminLoginSchema };

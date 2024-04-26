@@ -37,10 +37,6 @@ const userSchema = new Schema(
       type: Date,
       default: Date.now() + 300000,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
     isProfileCompleted: {
       type: Boolean,
       default: false,

@@ -26,6 +26,8 @@ const updateUserStatus = async (phoneNumber, otp) =>
     { new: true }
   );
 
+const getAllusers = async() => await User.find({isProfileCompleted:true})
+
 export {
   registerPhone,
   findUserByPhone,
