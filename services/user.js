@@ -31,7 +31,7 @@ const getAllusers = async () =>
 
 const getUser = async (id) =>
   await User.findById({ _id: id }).select(
-    "phoneNumber fullName email address panNumber dateOfBirth gender"
+    "phoneNumber fullName email address panNumber dateOfBirth gender -_id"
   );
 
 export {
