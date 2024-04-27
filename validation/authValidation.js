@@ -21,8 +21,8 @@ const otpSchema = z
         invalid_type_error: "otp should be of type string.",
       })
       .trim()
-      .min(6, { message: "Invalid otp . Please provide 6 digit otp code." })
-      .max(6, { message: "Invalid otp . Please provide 6 digit otp code." }),
+      .min(4, { message: "Invalid otp . Please provide 6 digit otp code." })
+      .max(4, { message: "Invalid otp . Please provide 6 digit otp code." }),
     phoneNumber: z
       .string({
         required_error: "Phone number is required",

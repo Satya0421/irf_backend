@@ -45,6 +45,12 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    bankDetails: {
+      type: Schema.Types.ObjectId,
+    },
+    kycDetails: {
+      type: Schema.Types.ObjectId,
+    },
   },
   {
     timestamps: true,

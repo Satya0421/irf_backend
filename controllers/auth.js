@@ -129,7 +129,6 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
 //admin login section
 //@route POST api/auth/admin/login
-
 const adminLogin = asyncHandler(async (req, res, next) => {
   let { email, password } = req.body;
   const isEmailExist = await adminService.isAdminEmailExist(email);

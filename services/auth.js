@@ -23,7 +23,7 @@ const verifyToken = (token, secret) => {
 };
 
 function generateOtp() {
-  return Math.floor(Math.random() * 900000) + 100000;
+  return Math.floor(Math.random() * 9000) + 1000;
 }
 
 export { encryptPassword, comparePassowrd, generatetoken, verifyToken, generateOtp };
