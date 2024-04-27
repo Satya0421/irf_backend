@@ -71,7 +71,6 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
     message: "user verified",
     isUserNew: !user?.isProfileCompleted,
     isUserBlocked: user?.isBlocked,
-    isUserVerified: user?.isVerifiedUser,
     token: accessToken,
     userName: user?.fullName || "",
   });
@@ -122,7 +121,6 @@ const registerUser = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "user registred successfully",
-    isUserVerified: user?.isVerifiedUser,
     isUserBlocked: user?.isBlocked,
     isUserNew: !user?.isProfileCompleted,
     token: accessToken,
@@ -146,7 +144,7 @@ const adminLogin = asyncHandler(async (req, res, next) => {
   const access_token = authService.generatetoken(
     { adminId: isEmailExist._id, role: "admin" },
     token_secret,
-    "15m"
+    "7d"
   );
   res.status(200).json({
     status: "success",
