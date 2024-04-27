@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
+import userRoutes from "./routes/user.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ connectDB();
 //routes setup
 server.use("/api/auth", authRoutes);
 server.use("/api/admin", adminRoutes);
+server.use("/api/user", userRoutes);
 
 //catch not founded routes and forwards to error handler
 server.all("*", (req, res, next) => {

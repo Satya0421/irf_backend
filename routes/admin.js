@@ -1,7 +1,8 @@
 import express from "express";
-const router = express.Router();
 import * as adminController from "../controllers/admin.js";
 import adminAuth from "../middlewares/adminAuth.js";
+
+const router = express.Router();
 
 router.get("/get-all-users", adminAuth, adminController.getAllUsers);
 

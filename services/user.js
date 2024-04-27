@@ -29,6 +29,11 @@ const updateUserStatus = async (phoneNumber, otp) =>
 const getAllusers = async () =>
   await User.find({ isProfileCompleted: true }).sort({ createdAt: -1 });
 
+const getUser = async (id) =>
+  await User.findById({ _id: id }).select(
+    "phoneNumber fullName email address panNumber dateOfBirth gender"
+  );
+
 export {
   registerPhone,
   findUserByPhone,
@@ -40,4 +45,5 @@ export {
   findUserByPhoneAndOtp,
   updateUserStatus,
   getAllusers,
+  getUser,
 };
