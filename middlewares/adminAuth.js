@@ -7,13 +7,13 @@ const adminAuth = (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
   if (!token) {
-    throw new AppError("token not found", 401);
+    return next(new AppError("token not found", 401));
   }
   try {
     const token_secret = process.env.JWT_ADMIN_SECRET_KEY;
     const decoded = verifyToken(token, token_secret);
     if (decoded?.payload?.role !== "admin") {
-      throw new AppError("unauthorized user", 401);
+      return next(new AppError("unauthorized user", 404));
     }
     req.adminId = decoded?.payload.adminId;
     next();

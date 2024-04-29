@@ -23,10 +23,6 @@ const bankSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    accountStatus: {
-      type: String,
-      default: "pending",
-    },
   },
   {
     timestamps: true,

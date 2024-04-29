@@ -8,20 +8,18 @@ const userAuth = (req, res, next) => {
   }
   if (!token) {
     console.log("token not found");
-    throw new AppError("token not found", 401);
+    return next(new AppError("token not found", 401));
   }
   try {
     const token_secret = process.env.JWT_USER_SECRET_KEY;
     const { payload } = verifyToken(token, token_secret);
-    console.log(payload);
     if (payload.role !== "user") {
-      throw new AppError("unauthorized user", 401);
+      return next(new AppError("unauthorized user", 404));
     }
     req.userId = payload.userId;
     next();
   } catch (error) {
     console.log(error?.message);
-    console.log(error);
     throw new AppError(error?.message || "unauthorized user", 401);
   }
 };
