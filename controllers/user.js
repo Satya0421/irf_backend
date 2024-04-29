@@ -64,7 +64,6 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
       ifc,
       upiId,
     });
-    console.log(bankDetails);
     return res.status(200).json({
       status: "success",
       message: "Bank details updated successfully",
@@ -79,13 +78,13 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
     throw new AppError("upiId already exist", 400);
   }
 
-  const bankDetails = await bankServices.addBankDetails(
+  const bankDetails = await bankServices.addBankDetails({
     accountHolderName,
     bankName,
     accountNumber,
     ifc,
-    upiId
-  );
+    upiId,
+  });
   await userServices.updateBankDetailsId(userId, bankDetails._id);
 
   res.status(201).json({
