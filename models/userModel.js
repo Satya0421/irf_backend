@@ -47,6 +47,7 @@ const userSchema = new Schema(
     },
     bankDetails: {
       type: Schema.Types.ObjectId,
+      ref: "Bank",
     },
     kycDetails: {
       type: Schema.Types.ObjectId,

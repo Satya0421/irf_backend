@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const bankSchema = new Schema(
   {
-    name: {
+    bankName: {
       type: String,
       required: [true, "bank name is required"],
     },
@@ -23,9 +23,13 @@ const bankSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    accountStatus: {
+      type: String,
+      default: "pending",
+    },
   },
   {
     timestamps: true,
   }
 );
-export default bankSchema;
+export default model("Bank", bankSchema, "bank");

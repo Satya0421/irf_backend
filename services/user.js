@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
 
 const findUserByPhone = async (phoneNumber) => await User.findOne({ phoneNumber });
 
@@ -34,6 +35,11 @@ const getUser = async (id) =>
     "phoneNumber fullName email address panNumber dateOfBirth gender -_id"
   );
 
+const findUserById = async (id) => await User.findById({ _id: id });
+
+const updateBankDetails = async (id, bankId) =>
+  await User.findByIdAndUpdate({ _id: id }, { bankDetails: bankId }, { new: true });
+
 export {
   registerPhone,
   findUserByPhone,
@@ -46,4 +52,6 @@ export {
   updateUserStatus,
   getAllusers,
   getUser,
+  findUserById,
+  updateBankDetails,
 };
