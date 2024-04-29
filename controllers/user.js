@@ -27,7 +27,7 @@ const getUserInformation = asyncHandler(async (req, res, next) => {
 //@route POST api/user/add-bank-details
 const addUserBankDetails = asyncHandler(async (req, res, next) => {
   const userId = req.userId;
-  const { bankName, accountNumber, ifc, upiId } = req.body;
+  const { accountHolderName, bankName, accountNumber, ifc, upiId } = req.body;
 
   if (!userId) {
     throw new AppError("unauthorized user", 401);
@@ -43,16 +43,55 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
     throw new AppError("befor updating bank details,please complete your profile", 400);
   }
 
-  if (user.bankDetails) {
-    throw new AppError("bank details already added", 400);
+  const isAccountNumberExist = await bankServices.isAccountNumberExist(accountNumber);
+  const isUpiIdExist = await bankServices.isUpiIdExist(upiId);
+
+  if (user?.bankDetails) {
+    const details = await bankServices.findBankDetailsById(user.bankDetails);
+
+    if (isAccountNumberExist && isAccountNumberExist.accountNumber !== details.accountNumber) {
+      throw new AppError("account number already exist", 400);
+    }
+
+    if (isUpiIdExist && isUpiIdExist.upiId !== details.upiId) {
+      throw new AppError("upiId already exist", 400);
+    }
+
+    const bankDetails = await bankServices.updateBankDetails(user.bankDetails, {
+      accountHolderName,
+      bankName,
+      accountNumber,
+      ifc,
+      upiId,
+    });
+    console.log(bankDetails);
+    return res.status(200).json({
+      status: "success",
+      message: "Bank details updated successfully",
+      bankDetails,
+    });
   }
 
-  const bankDetails = await bankServices.addBankDetails(bankName, accountNumber, ifc, upiId);
-  await userServices.updateBankDetails(userId, bankDetails._id);
+  if (isAccountNumberExist) {
+    throw new AppError("account number already exist", 400);
+  }
+  if (isUpiIdExist) {
+    throw new AppError("upiId already exist", 400);
+  }
+
+  const bankDetails = await bankServices.addBankDetails(
+    accountHolderName,
+    bankName,
+    accountNumber,
+    ifc,
+    upiId
+  );
+  await userServices.updateBankDetailsId(userId, bankDetails._id);
 
   res.status(201).json({
     status: "success",
     message: "Bank details updated successfully",
+    bankDetails,
   });
 });
 export { getUserInformation, addUserBankDetails };

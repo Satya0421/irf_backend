@@ -1,5 +1,6 @@
 import { z } from "zod";
 const bankDetailsSchema = z.object({
+  accountHolderName: z.string({ required_error_message: "account holder name is required" }).trim(),
   bankName: z.string({ required_error: "bank name is required" }).trim(),
   accountNumber: z
     .string({ required_error: "account number is required" })

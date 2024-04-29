@@ -2,6 +2,10 @@ import { Schema, model } from "mongoose";
 
 const bankSchema = new Schema(
   {
+    accountHolderName: {
+      type: String,
+      required: [true, "account holder name is required"],
+    },
     bankName: {
       type: String,
       required: [true, "bank name is required"],
@@ -17,6 +21,7 @@ const bankSchema = new Schema(
     },
     upiId: {
       type: String,
+      unique: true,
       required: [true, "upi id is required"],
     },
     isAccountVerified: {

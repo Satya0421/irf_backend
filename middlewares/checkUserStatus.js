@@ -3,7 +3,6 @@ import { findUserById } from "../services/user.js";
 
 const checkUserStatus = async (req, res, next) => {
   const userId = req?.userId;
-  console.log(userId);
 
   if (!userId) {
     return next(new AppError("user not found", 404));

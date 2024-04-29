@@ -37,7 +37,7 @@ const getUser = async (id) =>
 
 const findUserById = async (id) => await User.findById({ _id: id });
 
-const updateBankDetails = async (id, bankId) =>
+const updateBankDetailsId = async (id, bankId) =>
   await User.findByIdAndUpdate({ _id: id }, { bankDetails: bankId }, { new: true });
 
 export {
@@ -53,5 +53,5 @@ export {
   getAllusers,
   getUser,
   findUserById,
-  updateBankDetails,
+  updateBankDetailsId,
 };
