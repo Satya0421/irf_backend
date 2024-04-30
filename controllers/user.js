@@ -99,12 +99,13 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
 //@route GET api/user/get-bank-details
 const getBankDetails = asyncHandler(async (req, res, next) => {
   const userId = req.userId;
+
   if (!userId) {
     throw new AppError("unauthorized user", 401);
   }
 
   const user = await userServices.findUserById(userId);
-
+  console.log(userId);
   if (!user) {
     throw new AppError("user not found", 404);
   }
