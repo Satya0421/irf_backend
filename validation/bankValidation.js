@@ -7,11 +7,11 @@ const bankDetailsSchema = z.object({
     .trim()
     .min(9, { message: "account number should contain atleast 9 characters" })
     .max(12, { message: "account number should not contain more than 12 characters" }),
-  ifcCode: z
-    .string({ required_error: "ifc is required" })
+  ifscCode: z
+    .string({ required_error: "ifsc code is required" })
     .trim()
-    .min(11, { message: "ifc should contain 11 characters" })
-    .max(11, { message: "ifc should contain 11 characters" }),
+    .min(11, { message: "ifsc code should contain 11 characters" })
+    .max(11, { message: "ifsc code should contain 11 characters" }),
   upiId: z
     .string({ required_error: "upi id is required" })
     .trim()

@@ -27,7 +27,7 @@ const getUserInformation = asyncHandler(async (req, res, next) => {
 //@route POST api/user/add-bank-details
 const addUserBankDetails = asyncHandler(async (req, res, next) => {
   const userId = req.userId;
-  const { accountHolderName, bankName, accountNumber, ifcCode, upiId } = req.body;
+  const { accountHolderName, bankName, accountNumber, ifscCode, upiId } = req.body;
 
   if (!userId) {
     throw new AppError("unauthorized user", 401);
@@ -61,7 +61,7 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
       accountHolderName,
       bankName,
       accountNumber,
-      ifcCode,
+      ifscCode,
       upiId,
     });
     return res.status(200).json({
@@ -82,7 +82,7 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
     accountHolderName,
     bankName,
     accountNumber,
-    ifcCode,
+    ifscCode,
     upiId,
   });
   await userServices.updateBankDetailsId(userId, bankDetails._id);
