@@ -133,11 +133,11 @@ const adminLogin = asyncHandler(async (req, res, next) => {
   let { email, password } = req.body;
   const isEmailExist = await adminService.isAdminEmailExist(email);
   if (!isEmailExist) {
-    throw new AppError("invalid email", 401);
+    throw new AppError("invalid email", 400);
   }
   const isValidUser = await authService.comparePassowrd(password, isEmailExist.password);
   if (!isValidUser) {
-    throw new AppError("invalid password", 401);
+    throw new AppError("invalid password", 400);
   }
   const token_secret = process.env.JWT_ADMIN_SECRET_KEY;
   const access_token = authService.generatetoken(

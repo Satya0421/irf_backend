@@ -15,7 +15,7 @@ const bankSchema = new Schema(
       unique: true,
       required: [true, "account number is required"],
     },
-    ifc: {
+    ifcCode: {
       type: String,
       required: [true, "ifc is required"],
     },

@@ -7,7 +7,7 @@ const bankDetailsSchema = z.object({
     .trim()
     .min(9, { message: "account number should contain atleast 9 characters" })
     .max(12, { message: "account number should not contain more than 12 characters" }),
-  ifc: z
+  ifcCode: z
     .string({ required_error: "ifc is required" })
     .trim()
     .min(11, { message: "ifc should contain 11 characters" })
