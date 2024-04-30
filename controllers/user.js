@@ -28,6 +28,7 @@ const getUserInformation = asyncHandler(async (req, res, next) => {
 const addUserBankDetails = asyncHandler(async (req, res, next) => {
   const userId = req.userId;
   const { accountHolderName, bankName, accountNumber, ifscCode, upiId } = req.body;
+  console.log(req.body);
 
   if (!userId) {
     throw new AppError("unauthorized user", 401);
@@ -109,6 +110,7 @@ const getBankDetails = asyncHandler(async (req, res, next) => {
   }
 
   if (!user?.bankDetails) {
+    console.log("not fund account");
     throw new AppError("user bank details not found", 400);
   }
 
