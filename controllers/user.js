@@ -93,4 +93,30 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
     bankDetails,
   });
 });
-export { getUserInformation, addUserBankDetails };
+
+//getUserBankDetails
+//@route GET api/user/get-bank-details
+const getBankDetails = asyncHandler(async (req, res, next) => {
+  const userId = req.userId;
+  if (!userId) {
+    throw new AppError("unauthorized user", 401);
+  }
+
+  const user = await userServices.findUserById(userId);
+
+  if (!user) {
+    throw new AppError("user not found", 404);
+  }
+
+  if (!user?.bankDetails) {
+    throw new AppError("user bank details not added", 400);
+  }
+  const bankDetails = await bankServices.findBankDetailsById(user.bankDetails);
+
+  res.status(200).json({
+    status: "success",
+    message: "bank details founded successfully",
+    bankDetails,
+  });
+});
+export { getUserInformation, addUserBankDetails, getBankDetails };

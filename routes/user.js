@@ -15,5 +15,6 @@ router.post(
   validation(bankDetailsSchema),
   userController.addUserBankDetails
 );
+router.get("/get-bank-details", userAuth, checkUserStatus, userController.getBankDetails);
 
 export default router;

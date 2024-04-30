@@ -1,6 +1,7 @@
 import Bank from "../models/bankModel.js";
 
 const addBankDetails = async (bankDetails) => await Bank.create({ ...bankDetails });
+
 const updateBankDetails = async (id, bankdetails) =>
   await Bank.findByIdAndUpdate({ _id: id }, { ...bankdetails }, { new: true });
 
