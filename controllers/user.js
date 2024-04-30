@@ -109,14 +109,23 @@ const getBankDetails = asyncHandler(async (req, res, next) => {
   }
 
   if (!user?.bankDetails) {
-    throw new AppError("user bank details not added", 400);
+    throw new AppError("user bank details not found", 400);
   }
+
   const bankDetails = await bankServices.findBankDetailsById(user.bankDetails);
+  if (!bankDetails?._doc) {
+    throw new AppError("bankDetails not found", 404);
+  }
+  let newBankDetails = bankDetails?._doc;
+  newBankDetails = {
+    ...newBankDetails,
+    panNumber: user?.panNumber,
+  };
 
   res.status(200).json({
     status: "success",
     message: "bank details founded successfully",
-    bankDetails,
+    bankDetails: newBankDetails,
   });
 });
 export { getUserInformation, addUserBankDetails, getBankDetails };
