@@ -4,6 +4,7 @@ import adminAuth from "../middlewares/adminAuth.js";
 
 const router = express.Router();
 
-router.get("/get-all-users", adminAuth, adminController.getAllUsers);
+router.get("/users", adminAuth, adminController.getAllUsers);
+router.patch("/users/:userId/status", adminAuth, adminController.changeUserStatus);
 
 export default router;

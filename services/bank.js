@@ -11,6 +11,7 @@ const isUpiIdExist = async (upiId) => await Bank.findOne({ upiId });
 
 const findBankDetailsById = async (id) => await Bank.findById(id);
 
+
 export {
   addBankDetails,
   updateBankDetails,

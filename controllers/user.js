@@ -35,7 +35,7 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
   }
 
   const user = await userServices.findUserById(userId);
-  console.log(user,userId);
+  console.log(user, userId);
 
   if (!user) {
     throw new AppError("user not found", 404);
@@ -112,11 +112,14 @@ const getBankDetails = asyncHandler(async (req, res, next) => {
   }
 
   if (!user?.bankDetails) {
-    console.log("not fund account");
     throw new AppError("user bank details not found", 400);
   }
 
   const bankDetails = await bankServices.findBankDetailsById(user.bankDetails);
+  if (!bankDetails) {
+    await userServices.deleteBankDetailsId(user.id);
+    throw new AppError("bankDetails not found", 404);
+  }
   if (!bankDetails?._doc) {
     throw new AppError("bankDetails not found", 404);
   }
