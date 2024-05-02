@@ -73,6 +73,7 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
     isUserBlocked: user?.isBlocked,
     token: accessToken,
     userName: user?.fullName || "",
+    panNumber: user?.panNumber || "",
   });
 });
 
