@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import * as userServices from "../services/user.js";
 import AppError from "../utils/appError.js";
 import * as adminServices from "../services/admin.js";
+import xlsx from "xlsx";
 
 //get allUser
 //@route POST api/admin/users
@@ -22,7 +23,7 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
 });
 
 //change user status
-//@route PATCH api/admin/change-user-status/${userId}
+//@route PATCH api/admin/users/:userId/status
 const changeUserStatus = asyncHandler(async (req, res, next) => {
   const { userId } = req.params;
   console.log(req.params);
@@ -37,4 +38,36 @@ const changeUserStatus = asyncHandler(async (req, res, next) => {
   });
 });
 
-export { getAllUsers, changeUserStatus };
+//read race card
+//@route POST api/admin/read/excel
+const readRaceCard = asyncHandler(async (req, res, next) => {
+  // Reading the Excel file
+  const workbook = xlsx.readFile("./public/race.xlsx");
+  // Extracting data from each sheet
+  const allTableData = [];
+  const allRaces = [];
+  workbook.SheetNames.forEach((sheetName) => {
+    const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    console.log(sheetData, sheetName);
+    const race = [];
+    for (const data of sheetData) {
+      race.push({
+        horseNmae: data?.HorseName,
+        drawBox: data?.DrawBox,
+        horseNumber: data?.HorseNumber,
+      });
+    }
+    allRaces.push(race);
+    allTableData.push({ sheetName, data: sheetData });
+  });
+  console.log(allRaces, "all races");
+
+  res.status(200).json({
+    status: "success",
+    message: "xlsx data readed successfully",
+    allTableData,
+    allRaces,
+  });
+});
+
+export { getAllUsers, changeUserStatus, readRaceCard };
