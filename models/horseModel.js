@@ -19,10 +19,10 @@ const horseSchema = new Schema(
       type: Number,
     },
     allowance: {
-      type: Number,
+      type: Number || null,
     },
     rating: {
-      type: Number,
+      type: Number || null,
     },
   },
   {
