@@ -47,6 +47,12 @@ const readRaceCard = asyncHandler(async (req, res, next) => {
   if (!req.file || (req.file && !req.file.buffer)) {
     return next(new AppError("No file uploaded!", 400));
   }
+  const { raceDate } = req.body;
+  if (!raceDate) {
+    return next(new AppError("Date is required", 400));
+  }
+  const givenDate = new Date(raceDate);
+  const isoDate = givenDate.toISOString().slice(0, 10);
   try {
     const workbook = xlsx.read(req.file.buffer, { type: "buffer" });
     for (const sheetName of workbook.SheetNames) {
@@ -66,7 +72,7 @@ const readRaceCard = asyncHandler(async (req, res, next) => {
 
       //adding new horses and getting new race details
       const race = await horseServices.processSheetData(sheetData);
-      await raceServices.addNewRace(race, Date.now());
+      await raceServices.addNewRace(race, isoDate);
       allRaces.push(race);
       allTableData.push({ sheetName, data: sheetData });
     }
@@ -74,8 +80,6 @@ const readRaceCard = asyncHandler(async (req, res, next) => {
     res.status(200).json({
       status: "success",
       message: "xlsx data readed successfully",
-      allTableData,
-      allRaces,
     });
   } catch (error) {
     console.error(error);
