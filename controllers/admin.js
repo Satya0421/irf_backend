@@ -44,7 +44,7 @@ const changeUserStatus = asyncHandler(async (req, res, next) => {
 const readRaceCard = asyncHandler(async (req, res, next) => {
   const allTableData = [];
   const allRaces = [];
-  if (!req.file || (req.file && !req.file.buffer)) {
+  if (!req.file) {
     return next(new AppError("No file uploaded!", 400));
   }
   const { raceDate } = req.body;
