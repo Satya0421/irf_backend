@@ -13,5 +13,6 @@ router.post(
   adminAuth,
   adminController.readRaceCard
 );
+router.get("/races/:date", adminAuth, adminController.getRaces);
 
 export default router;

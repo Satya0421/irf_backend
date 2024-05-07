@@ -43,3 +43,5 @@ server.listen(PORT, (err) => {
   if (err) console.log("server connection error".bgRed);
   console.log(`server listening on port ${PORT}`.bgMagenta);
 });
+
+//node version v18.16.0

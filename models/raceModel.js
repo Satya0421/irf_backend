@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const horseSchema = new Schema({
-  horseId: { type: Schema.Types.ObjectId, ref: "Horse", required: true },
+  horse: { type: Schema.Types.ObjectId, ref: "Horse", required: true },
   drawBox: { type: Number },
   horseNumber: { type: Number },
 });

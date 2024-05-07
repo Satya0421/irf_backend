@@ -87,4 +87,18 @@ const readRaceCard = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { getAllUsers, changeUserStatus, readRaceCard };
+//find races based on dates
+//@route GET api/admin/races/:date
+const getRaces = asyncHandler(async (req, res, next) => {
+  const { date } = req.params;
+  if (!date) {
+    throw new AppError("date must be provided", 400);
+  }
+  const races = await raceServices.findRacesByDate(date);
+  res.status(200).json({
+    status: "success",
+    races,
+  });
+});
+
+export { getAllUsers, changeUserStatus, readRaceCard, getRaces };
