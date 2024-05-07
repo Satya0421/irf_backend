@@ -28,14 +28,14 @@ const processSheetData = async (sheetData) => {
       const newHorse = new Horse(horseData);
       const horse = await newHorse.save();
       const newRace = {
-        horseId: horse?._id,
+        horse: horse?._id,
         drawBox: data?.DrawBox,
         horseNumber: data?.HorseNumber,
       };
       race.push(newRace);
     } else {
       const newRace = {
-        horseId: isHorseExist?._id,
+        horse: isHorseExist?._id,
         drawBox: data?.DrawBox,
         horseNumber: data?.HorseNumber,
       };
