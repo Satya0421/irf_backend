@@ -9,7 +9,7 @@ const addNewHorse = async (horseData) => {
 
 function prepareHorseData(data) {
   return {
-    name: data?.HorseName,
+    name: data?.HorseName.toLowerCase(),
     ageColourSex: data?.AgeColourSex,
     trainer: data?.Trainer,
     jockey: data?.Jockey,
@@ -22,7 +22,7 @@ function prepareHorseData(data) {
 const processSheetData = async (sheetData) => {
   const race = [];
   for (const data of sheetData) {
-    const isHorseExist = await Horse.findOne({ name: data.HorseName });
+    const isHorseExist = await Horse.findOne({ name: data.HorseName.toLowerCase() });
     if (!isHorseExist) {
       const horseData = prepareHorseData(data);
       const newHorse = new Horse(horseData);
