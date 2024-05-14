@@ -32,4 +32,8 @@ const createNewTournament = async (tournamentData) => {
   return await newTournament.save();
 };
 
-export { createNewTournament, prepareTournamentData };
+const isTournamentExist = async (tournamentName) => {
+  return await Tournament.find({ name: tournamentName, date: { $gt: new Date() } });
+};
+
+export { createNewTournament, prepareTournamentData, isTournamentExist };

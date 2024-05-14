@@ -112,6 +112,11 @@ const createTournament = asyncHandler(async (req, res, next) => {
   }
 
   const newTournament = tournamentServices.prepareTournamentData(tournamentsData);
+  const isTournamentExist = await tournamentServices.isTournamentExist(newTournament.name);
+
+  if (isTournamentExist && isTournamentExist.length > 0) {
+    throw new AppError("tournament is already exist", 400);
+  }
   const tournament = await tournamentServices.createNewTournament(newTournament);
 
   res.status(200).json({
