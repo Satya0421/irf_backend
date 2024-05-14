@@ -4,6 +4,7 @@ import AppError from "../utils/appError.js";
 import * as adminServices from "../services/admin.js";
 import * as horseServices from "../services/horse.js";
 import * as raceServices from "../services/race.js";
+import * as tournamentServices from "../services/tournament.js";
 import xlsx from "xlsx";
 
 //get allUser
@@ -101,4 +102,21 @@ const getRaces = asyncHandler(async (req, res, next) => {
   });
 });
 
-export { getAllUsers, changeUserStatus, readRaceCard, getRaces };
+//create tournaments
+//@routes POST api/admin/tournament
+const createTournament = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  const tournamentsData = req.body;
+  if (!tournamentsData) {
+    throw new AppError("tournament data is required", 400);
+  }
+
+  const newTournament = tournamentServices.prepareTournamentData(tournamentsData);
+  const tournament = await tournamentServices.createNewTournament(newTournament);
+
+  res.status(200).json({
+    status: "success",
+    message: "Tournament created successfully",
+  });
+});
+export { getAllUsers, changeUserStatus, readRaceCard, getRaces, createTournament };

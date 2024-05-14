@@ -14,5 +14,6 @@ router.post(
   adminController.readRaceCard
 );
 router.get("/races/:date", adminAuth, adminController.getRaces);
+router.post("/tournament", adminAuth, adminController.createTournament);
 
 export default router;
