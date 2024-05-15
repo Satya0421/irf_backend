@@ -105,7 +105,6 @@ const getRaces = asyncHandler(async (req, res, next) => {
 //create tournaments
 //@routes POST api/admin/tournament
 const createTournament = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
   const tournamentsData = req.body;
   if (!tournamentsData) {
     throw new AppError("tournament data is required", 400);
@@ -124,4 +123,53 @@ const createTournament = asyncHandler(async (req, res, next) => {
     message: "Tournament created successfully",
   });
 });
-export { getAllUsers, changeUserStatus, readRaceCard, getRaces, createTournament };
+
+//get tournament
+//@routes GET api/admin/tournaments
+const getAllTournaments = asyncHandler(async (req, res, next) => {
+  const tournaments = await tournamentServices.findUpcomingTournaments();
+  if (!tournaments) {
+    return res.status(200).json({
+      status: "success",
+      message: "There is no available tournament",
+      tournaments: [],
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "tournament available",
+    tournaments,
+  });
+});
+
+//get tournaments based on dates
+//@routes GET api/admin/tournaments/:date
+const getTournaments = asyncHandler(async (req, res, next) => {
+  const { date } = req.params;
+  if (!date) {
+    throw new AppError("date is not found", 400);
+  }
+  const tournaments = await tournamentServices.findTournaments(date);
+  if (!tournaments) {
+    return res.status(200).json({
+      status: "success",
+      message: "There is no available tournament",
+      tournaments: [],
+    });
+  }
+  res.status(200).json({
+    status: "success",
+    message: "tournament available",
+    tournaments,
+  });
+});
+export {
+  getAllUsers,
+  changeUserStatus,
+  readRaceCard,
+  getRaces,
+  createTournament,
+  getAllTournaments,
+  getTournaments,
+};
