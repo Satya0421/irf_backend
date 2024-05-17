@@ -49,10 +49,20 @@ const findTournaments = async (date) => {
   return await Tournament.find({ date: date });
 };
 
+const getTournamentDetails = async (id) => {
+  return await Tournament.findOne({ _id: id })
+    .populate("races.race")
+    .populate({
+      path: "races.race",
+      populate: { path: "horses.horse" },
+    });
+};
+
 export {
   createNewTournament,
   prepareTournamentData,
   isTournamentExist,
   findUpcomingTournaments,
   findTournaments,
+  getTournamentDetails,
 };

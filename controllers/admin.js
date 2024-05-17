@@ -164,6 +164,22 @@ const getTournaments = asyncHandler(async (req, res, next) => {
     tournaments,
   });
 });
+
+//get tournament information
+//@routes GET api/tournaments/:id
+const getTournamentInformation = asyncHandler(async (req, res, next) => {
+  let { id } = req.params;
+  if (!id) {
+    throw new AppError("tounament id is required", 400);
+  }
+  const tournament = await tournamentServices.getTournamentDetails(id);
+  res.status(200).json({
+    status: "success",
+    message: "tournament information found",
+    tournament: tournament ?? [],
+  });
+});
+
 export {
   getAllUsers,
   changeUserStatus,
@@ -172,4 +188,5 @@ export {
   createTournament,
   getAllTournaments,
   getTournaments,
+  getTournamentInformation,
 };
