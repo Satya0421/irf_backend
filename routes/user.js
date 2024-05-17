@@ -16,5 +16,6 @@ router.post(
   userController.addUserBankDetails
 );
 router.get("/get-bank-details", userAuth, checkUserStatus, userController.getBankDetails);
+router.get("/tournaments", userAuth, checkUserStatus, userController.getUpcomingTournaments);
 
 export default router;

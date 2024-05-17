@@ -2,6 +2,7 @@ import * as userServices from "../services/user.js";
 import asyncHandler from "express-async-handler";
 import AppError from "../utils/appError.js";
 import * as bankServices from "../services/bank.js";
+import * as tournamentServices from "../services/tournament.js";
 
 //getUserInformation
 //@route POST api/user/get-user
@@ -135,4 +136,14 @@ const getBankDetails = asyncHandler(async (req, res, next) => {
     bankDetails: newBankDetails,
   });
 });
-export { getUserInformation, addUserBankDetails, getBankDetails };
+
+//getTournamentDetails
+//@route GET api/user/tournaments
+const getUpcomingTournaments = asyncHandler(async (req, res, next) => {
+  const tournament = await tournamentServices.getUpcomingTournaments();
+  res.status(200).json({
+    status: "success",
+    tournament: tournament ?? [],
+  });
+});
+export { getUserInformation, addUserBankDetails, getBankDetails, getUpcomingTournaments };

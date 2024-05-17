@@ -38,6 +38,7 @@ const isTournamentExist = async (tournamentName) => {
 
 const findUpcomingTournaments = async () => {
   return await Tournament.find({ dateAndTime: { $gt: new Date() } })
+    .sort({ createdAt: -1 })
     .populate("races.race")
     .populate({
       path: "races.race",
@@ -46,7 +47,7 @@ const findUpcomingTournaments = async () => {
 };
 
 const findTournaments = async (date) => {
-  return await Tournament.find({ date: date });
+  return await Tournament.find({ date: date }).sort({ createdAt: -1 });
 };
 
 const getTournamentDetails = async (id) => {
@@ -58,6 +59,10 @@ const getTournamentDetails = async (id) => {
     });
 };
 
+const getUpcomingTournaments = async () => {
+  return await Tournament.find({ dateAndTime: { $gte: new Date() } }).sort({ createdAt: -1 });
+};
+
 export {
   createNewTournament,
   prepareTournamentData,
@@ -65,4 +70,5 @@ export {
   findUpcomingTournaments,
   findTournaments,
   getTournamentDetails,
+  getUpcomingTournaments,
 };
