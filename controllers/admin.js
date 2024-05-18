@@ -175,7 +175,7 @@ const getTournamentInformation = asyncHandler(async (req, res, next) => {
   }
   const isValid = isValidObjectId(id);
   if (!isValid) {
-    throw new AppError("invalid id", 400);
+    throw new AppError("invalid tournament id", 400);
   }
 
   const tournament = await tournamentServices.getTournamentDetails(id);
