@@ -170,13 +170,11 @@ const getTournaments = asyncHandler(async (req, res, next) => {
 //@routes GET api/tournaments/:id
 const getTournamentInformation = asyncHandler(async (req, res, next) => {
   let { id } = req.params;
-  console.log(isValid, "valid");
   if (!id) {
     throw new AppError("tounament id is required", 400);
   }
   const isValid = isValidObjectId(id);
-
-  if (isValid) {
+  if (!isValid) {
     throw new AppError("invalid id", 400);
   }
 
