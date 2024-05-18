@@ -6,6 +6,7 @@ import * as horseServices from "../services/horse.js";
 import * as raceServices from "../services/race.js";
 import * as tournamentServices from "../services/tournament.js";
 import xlsx from "xlsx";
+import { isValidObjectId } from "mongoose";
 
 //get allUser
 //@route POST api/admin/users
@@ -169,9 +170,16 @@ const getTournaments = asyncHandler(async (req, res, next) => {
 //@routes GET api/tournaments/:id
 const getTournamentInformation = asyncHandler(async (req, res, next) => {
   let { id } = req.params;
+  console.log(isValid, "valid");
   if (!id) {
     throw new AppError("tounament id is required", 400);
   }
+  const isValid = isValidObjectId(id);
+
+  if (isValid) {
+    throw new AppError("invalid id", 400);
+  }
+
   const tournament = await tournamentServices.getTournamentDetails(id);
   res.status(200).json({
     status: "success",
