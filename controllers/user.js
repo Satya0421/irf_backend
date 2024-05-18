@@ -141,9 +141,16 @@ const getBankDetails = asyncHandler(async (req, res, next) => {
 //@route GET api/user/tournaments
 const getUpcomingTournaments = asyncHandler(async (req, res, next) => {
   const tournament = await tournamentServices.getUpcomingTournaments();
+  const updatedTournaments = tournament.map((tournament) => {
+    return {
+      ...tournament,
+      tournamentName: tournament.name,
+    };
+  });
+
   res.status(200).json({
     status: "success",
-    tournament: tournament ?? [],
+    tournament: updatedTournaments ?? [],
   });
 });
 export { getUserInformation, addUserBankDetails, getBankDetails, getUpcomingTournaments };
