@@ -140,14 +140,11 @@ const getBankDetails = asyncHandler(async (req, res, next) => {
 //getTournamentDetails
 //@route GET api/user/tournaments
 const getUpcomingTournaments = asyncHandler(async (req, res, next) => {
-  const tournament = await tournamentServices.getUpcomingTournaments();
-  const updatedTournaments = tournament.map((tournament) => {
-    return {
-      ...tournament,
-      tournamentName: tournament.name,
-    };
+  const tournaments = await tournamentServices.getUpcomingTournaments();
+  const updatedTournaments = tournaments.map((tournament) => {
+    const { name, ...rest } = tournament._doc;
+    return { ...rest, tournamentName: name };
   });
-
   res.status(200).json({
     status: "success",
     tournament: updatedTournaments ?? [],
