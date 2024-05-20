@@ -27,7 +27,9 @@ const updateUserStatus = async (phoneNumber, otp) =>
   );
 
 const getAllusers = async () =>
-  await User.find({ isProfileCompleted: true }).sort({ createdAt: -1 });
+  await User.find({ isProfileCompleted: true })
+    .populate({ path: "bankDetails", select: "isAccountVerified" })
+    .sort({ createdAt: -1 });
 
 const getUser = async (id) =>
   await User.findById({ _id: id }).select(
