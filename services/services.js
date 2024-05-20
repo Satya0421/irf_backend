@@ -3,4 +3,9 @@ function convertDateTime(dateString, timeString) {
   const date = new Date(combinedString);
   return date.toISOString();
 }
-export { convertDateTime };
+
+function isDate(str) {
+  var datePattern = /^\d{4}-\d{2}-\d{2}$/;
+  return datePattern.test(str);
+}
+export { convertDateTime, isDate };

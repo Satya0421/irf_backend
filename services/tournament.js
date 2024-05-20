@@ -14,7 +14,6 @@ function prepareTournamentData(datas) {
     throw new AppError("date and time is required", 400);
   }
   const dateAndTime = convertDateTime(datas?.date, datas?.time);
-  console.log(dateAndTime);
   return {
     name: datas?.tournamentName.toLowerCase(),
     numberOfParticipants: Number(datas?.numberOfParticipants),

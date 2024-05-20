@@ -3,6 +3,8 @@ import asyncHandler from "express-async-handler";
 import AppError from "../utils/appError.js";
 import * as bankServices from "../services/bank.js";
 import * as tournamentServices from "../services/tournament.js";
+import * as services from "../services/services.js";
+import * as raceservices from "../services/race.js";
 
 //getUserInformation
 //@route POST api/user/get-user
@@ -150,4 +152,29 @@ const getUpcomingTournaments = asyncHandler(async (req, res, next) => {
     tournament: updatedTournaments ?? [],
   });
 });
-export { getUserInformation, addUserBankDetails, getBankDetails, getUpcomingTournaments };
+
+//findRacesByDate
+//@route GET api/user/races/:date
+const findRacesByDate = asyncHandler(async (req, res, next) => {
+  let { date } = req.params;
+  if (!date) {
+    throw new AppError("date is required", 400);
+  }
+  const isDateValid = services.isDate(date);
+  if (!isDateValid) {
+    throw new AppError("invalid date format", 400);
+  }
+  const races = await raceservices.findRacesByDate(date);
+  res.status(200).json({
+    status: "success",
+    races: races ?? [],
+  });
+});
+
+export {
+  getUserInformation,
+  addUserBankDetails,
+  getBankDetails,
+  getUpcomingTournaments,
+  findRacesByDate,
+};
