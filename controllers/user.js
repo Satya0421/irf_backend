@@ -38,7 +38,6 @@ const addUserBankDetails = asyncHandler(async (req, res, next) => {
   }
 
   const user = await userServices.findUserById(userId);
-  console.log(user, userId);
 
   if (!user) {
     throw new AppError("user not found", 404);

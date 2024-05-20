@@ -181,8 +181,28 @@ const getTournamentInformation = asyncHandler(async (req, res, next) => {
   const tournament = await tournamentServices.getTournamentDetails(id);
   res.status(200).json({
     status: "success",
-    message: "tournament information found",
+    message: "tournament information",
     tournament: tournament ?? [],
+  });
+});
+
+//findUserDetailsWithBankDetails
+//@routes GET api/users/:id
+const findUserDetails = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  if (!id) {
+    throw new AppError("user id is required", 400);
+  }
+  const isValid = isValidObjectId(id);
+  if (!isValid) {
+    throw new AppError("invalid user id", 400);
+  }
+  const user = await userServices.findUserWithBankDetails(id);
+
+  res.status(200).json({
+    status: "success",
+    message: "user details",
+    user,
   });
 });
 
@@ -195,4 +215,5 @@ export {
   getAllTournaments,
   getTournaments,
   getTournamentInformation,
+  findUserDetails,
 };

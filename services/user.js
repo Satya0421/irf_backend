@@ -44,6 +44,9 @@ const updateBankDetailsId = async (id, bankId) =>
 const deleteBankDetailsId = async (id) =>
   await User.findByIdAndUpdate({ _id: id }, { $unset: { bankDetails: 1 } }, { new: true });
 
+const findUserWithBankDetails = async (id) =>
+  await User.findById(id).populate({ path: "bankDetails" });
+
 export {
   registerPhone,
   findUserByPhone,
@@ -59,4 +62,5 @@ export {
   findUserById,
   updateBankDetailsId,
   deleteBankDetailsId,
+  findUserWithBankDetails,
 };

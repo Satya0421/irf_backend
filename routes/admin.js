@@ -18,5 +18,6 @@ router.post("/tournament", adminAuth, adminController.createTournament);
 router.get("/tournaments", adminAuth, adminController.getAllTournaments);
 router.get("/tournaments/:date", adminAuth, adminController.getTournaments);
 router.get("/tournament/data/:id", adminAuth, adminController.getTournamentInformation);
+router.get("/user/:id", adminAuth, adminController.findUserDetails);
 
 export default router;
