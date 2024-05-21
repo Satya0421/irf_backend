@@ -11,6 +11,12 @@ const isUpiIdExist = async (upiId) => await Bank.findOne({ upiId });
 
 const findBankDetailsById = async (id) => await Bank.findById(id);
 
+const updateBankStatus = async (id, isAccountVerified) =>
+  await Bank.findByIdAndUpdate(
+    id,
+    { $set: { isAccountVerified: !isAccountVerified } },
+    { new: true }
+  );
 
 export {
   addBankDetails,
@@ -18,4 +24,5 @@ export {
   isAccountNumberExist,
   isUpiIdExist,
   findBankDetailsById,
+  updateBankStatus,
 };

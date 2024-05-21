@@ -5,6 +5,7 @@ import * as adminServices from "../services/admin.js";
 import * as horseServices from "../services/horse.js";
 import * as raceServices from "../services/race.js";
 import * as tournamentServices from "../services/tournament.js";
+import * as bankServices from "../services/bank.js";
 import xlsx from "xlsx";
 import { isValidObjectId } from "mongoose";
 
@@ -206,6 +207,24 @@ const findUserDetails = asyncHandler(async (req, res, next) => {
   });
 });
 
+//change user bank status
+//@route PATCH api/admin/user/bank/:bankId/status
+const updateUserBankStatus = asyncHandler(async (req, res, next) => {
+  let { bankId } = req.params;
+  if (!bankId) {
+    throw new AppError("bank id is required", 400);
+  }
+  const bank = await bankServices.findBankDetailsById(bankId);
+  if (!bank) {
+    throw new AppError("bank details is not found", 400);
+  }
+  await bankServices.updateBankStatus(bankId, bank?.isAccountVerified);
+  res.status(200).json({
+    status: "success",
+    message: "Bank status updated successfully",
+  });
+});
+
 export {
   getAllUsers,
   changeUserStatus,
@@ -216,4 +235,5 @@ export {
   getTournaments,
   getTournamentInformation,
   findUserDetails,
+  updateUserBankStatus,
 };
