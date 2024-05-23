@@ -10,7 +10,11 @@ const tournamentSchema = new Schema(
       type: Date,
       required: [true, "date is required"],
     },
-    time: {
+    registrationEndTime: {
+      type: String,
+      required: [true, "time is required"],
+    },
+    tournamentEndTime: {
       type: String,
       required: [true, "time is required"],
     },
@@ -27,9 +31,17 @@ const tournamentSchema = new Schema(
       required: [true, "number of participants is required"],
     },
     races: [{ race: { type: Schema.Types.ObjectId, ref: "Race", required: true } }],
-    dateAndTime: {
+    registrationEndDateAndTime: {
       type: Date,
       required: [true, "date and time is required"],
+    },
+    tournamentEndDateAndTime: {
+      type: Date,
+      required: [true, "date and time is required"],
+    },
+    startingStacks: {
+      type: Number,
+      required: [true, "starting stack is required"],
     },
   },
   {

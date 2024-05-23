@@ -13,15 +13,19 @@ function prepareTournamentData(datas) {
   if (!datas?.date && !datas?.time) {
     throw new AppError("date and time is required", 400);
   }
-  const dateAndTime = convertDateTime(datas?.date, datas?.time);
+  const registrationEndDateAndTime = convertDateTime(datas?.date, datas?.registrationEndTime);
+  const tournamentEndDateAndTime = convertDateTime(datas?.date, datas?.tournamentEndTime);
   return {
     name: datas?.tournamentName.toLowerCase(),
     numberOfParticipants: Number(datas?.numberOfParticipants),
     date: datas?.date,
-    time: datas?.time,
+    registrationEndTime: datas?.registrationEndTime,
+    tournamentEndTime: datas?.tournamentEndTime,
     entryFee: Number(datas?.entryFee),
     pricePool: Number(datas?.pricePool),
-    dateAndTime,
+    registrationEndDateAndTime,
+    tournamentEndDateAndTime,
+    startingStacks: Number(datas?.startingStacks),
     races,
   };
 }
@@ -32,11 +36,14 @@ const createNewTournament = async (tournamentData) => {
 };
 
 const isTournamentExist = async (tournamentName) => {
-  return await Tournament.find({ name: tournamentName, dateAndTime: { $gt: new Date() } });
+  return await Tournament.find({
+    name: tournamentName,
+    tournamentEndDateAndTime: { $gt: new Date() },
+  });
 };
 
 const findUpcomingTournaments = async () => {
-  return await Tournament.find({ dateAndTime: { $gt: new Date() } })
+  return await Tournament.find({ tournamentEndDateAndTime: { $gt: new Date() } })
     .sort({ createdAt: -1 })
     .populate("races.race")
     .populate({
@@ -59,7 +66,9 @@ const getTournamentDetails = async (id) => {
 };
 
 const getUpcomingTournaments = async () => {
-  return await Tournament.find({ dateAndTime: { $gte: new Date() } }).sort({ createdAt: -1 });
+  return await Tournament.find({ tournamentEndDateAndTime: { $gte: new Date() } }).sort({
+    createdAt: -1,
+  });
 };
 
 export {
