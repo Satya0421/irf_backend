@@ -49,7 +49,7 @@ const findUpcomingTournaments = async () => {
     .populate({
       path: "races.race",
       populate: { path: "horses.horse" },
-    });
+    }).select('-registrationEndDateAndTime -tournamentEndDateAndTime');
 };
 
 const findTournaments = async (date) => {
