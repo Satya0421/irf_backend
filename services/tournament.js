@@ -68,7 +68,7 @@ const getTournamentDetails = async (id) => {
 const getUpcomingTournaments = async () => {
   return await Tournament.find({ tournamentEndDateAndTime: { $gte: new Date() } }).sort({
     createdAt: -1,
-  });
+  }).select('-registrationEndDateAndTime -tournamentEndDateAndTime');
 };
 
 export {
