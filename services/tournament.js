@@ -74,10 +74,17 @@ const getUpcomingTournaments = async () => {
     .select("-registrationEndDateAndTime -tournamentEndDateAndTime");
 };
 
+const findTournamentById = async (touranmentId) => {
+  return await Tournament.findOne({
+    _id: touranmentId,
+    tournamentEndDateAndTime: { $gt: new Date() },
+  });
+};
+
 const addParticipantToTournament = async (tournamentId, userId) => {
   await Tournament.findByIdAndUpdate(
     tournamentId,
-    { $push: { participants: userId } },
+    { $addToSet: { participants: userId } },
     { new: true }
   );
 };
@@ -90,4 +97,6 @@ export {
   findTournaments,
   getTournamentDetails,
   getUpcomingTournaments,
+  addParticipantToTournament,
+  findTournamentById,
 };

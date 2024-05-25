@@ -19,5 +19,11 @@ router.get("/get-bank-details", userAuth, checkUserStatus, userController.getBan
 router.get("/tournaments", userAuth, checkUserStatus, userController.getUpcomingTournaments);
 router.get("/races/:date", userAuth, checkUserStatus, userController.findRacesByDate);
 router.get("/dates/race", userAuth, checkUserStatus, userController.findRaceAvailableDates);
+router.patch(
+  "/tournament/:tournamentId/participant",
+  userAuth,
+  checkUserStatus,
+  userController.addParticipantsToTournament
+);
 
 export default router;

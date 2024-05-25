@@ -5,6 +5,7 @@ import * as bankServices from "../services/bank.js";
 import * as tournamentServices from "../services/tournament.js";
 import * as services from "../services/services.js";
 import * as raceservices from "../services/race.js";
+import { isValidObjectId } from "mongoose";
 
 //getUserInformation
 //@route POST api/user/get-user
@@ -31,7 +32,6 @@ const getUserInformation = asyncHandler(async (req, res, next) => {
 const addUserBankDetails = asyncHandler(async (req, res, next) => {
   const userId = req.userId;
   const { accountHolderName, bankName, accountNumber, ifscCode, upiId } = req.body;
-  console.log(req.body);
 
   if (!userId) {
     throw new AppError("unauthorized user", 401);
@@ -171,12 +171,43 @@ const findRacesByDate = asyncHandler(async (req, res, next) => {
 });
 
 //findRaceAvailableDates
-//@route GET /api/races/dates
+//@route GET /api/user/races/dates
 const findRaceAvailableDates = asyncHandler(async (req, res, next) => {
   const dates = await raceservices.findRaceAvailableDates();
   res.status(200).json({
     status: "success",
     dates,
+  });
+});
+
+//addParticipantsToTournament
+//@route POST api/user/tournament/:tournamentId/participant
+const addParticipantsToTournament = asyncHandler(async (req, res, next) => {
+  let { tournamentId } = req.params;
+  const userId = req.userId;
+  if (!tournamentId || !userId) {
+    throw new AppError("Invalid request: tournamentId and userId are required", 400);
+  }
+  if (!isValidObjectId(tournamentId) || !isValidObjectId(userId)) {
+    throw new AppError("Invalid tournamentId or userId", 400);
+  }
+
+  const tournament = await tournamentServices.findTournamentById(tournamentId);
+  if (!tournament) {
+    throw new AppError("Tournament not found", 404);
+  }
+
+  const isAlreadyParticipant = tournament?.participants.some((participant) =>
+    participant.equals(userId)
+  );
+  if (isAlreadyParticipant) {
+    throw new AppError("User is already a participant in this tournament", 409);
+  }
+
+  await tournamentServices.addParticipantToTournament(tournamentId, userId);
+  res.status(200).json({
+    status: "success",
+    message: "New participant added successfully",
   });
 });
 
@@ -187,4 +218,5 @@ export {
   getUpcomingTournaments,
   findRacesByDate,
   findRaceAvailableDates,
+  addParticipantsToTournament,
 };
