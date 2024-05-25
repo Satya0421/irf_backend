@@ -30,7 +30,15 @@ const tournamentSchema = new Schema(
       type: Number,
       required: [true, "number of participants is required"],
     },
-    races: [{ race: { type: Schema.Types.ObjectId, ref: "Race", required: true } }],
+    races: [
+      {
+        race: {
+          type: Schema.Types.ObjectId,
+          ref: "Race",
+          required: true,
+        },
+      },
+    ],
     registrationEndDateAndTime: {
       type: Date,
       required: [true, "date and time is required"],
@@ -43,6 +51,12 @@ const tournamentSchema = new Schema(
       type: Number,
       required: [true, "starting stack is required"],
     },
+    participants: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,

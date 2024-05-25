@@ -49,7 +49,8 @@ const findUpcomingTournaments = async () => {
     .populate({
       path: "races.race",
       populate: { path: "horses.horse" },
-    }).select('-registrationEndDateAndTime -tournamentEndDateAndTime');
+    })
+    .select("-registrationEndDateAndTime -tournamentEndDateAndTime");
 };
 
 const findTournaments = async (date) => {
@@ -66,9 +67,19 @@ const getTournamentDetails = async (id) => {
 };
 
 const getUpcomingTournaments = async () => {
-  return await Tournament.find({ tournamentEndDateAndTime: { $gte: new Date() } }).sort({
-    createdAt: -1,
-  }).select('-registrationEndDateAndTime -tournamentEndDateAndTime');
+  return await Tournament.find({ tournamentEndDateAndTime: { $gte: new Date() } })
+    .sort({
+      createdAt: -1,
+    })
+    .select("-registrationEndDateAndTime -tournamentEndDateAndTime");
+};
+
+const addParticipantToTournament = async (tournamentId, userId) => {
+  await Tournament.findByIdAndUpdate(
+    tournamentId,
+    { $push: { participants: userId } },
+    { new: true }
+  );
 };
 
 export {

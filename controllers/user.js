@@ -170,10 +170,21 @@ const findRacesByDate = asyncHandler(async (req, res, next) => {
   });
 });
 
+//findRaceAvailableDates
+//@route GET /api/races/dates
+const findRaceAvailableDates = asyncHandler(async (req, res, next) => {
+  const dates = await raceservices.findRaceAvailableDates();
+  res.status(200).json({
+    status: "success",
+    dates,
+  });
+});
+
 export {
   getUserInformation,
   addUserBankDetails,
   getBankDetails,
   getUpcomingTournaments,
   findRacesByDate,
+  findRaceAvailableDates,
 };
