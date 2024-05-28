@@ -10,32 +10,46 @@ import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
 import userRoutes from "./routes/user.js";
+import http from "http";
+import { Server } from "socket.io";
+import socketConfig from "./utils/socket.js";
 
 dotenv.config();
 
-const server = express();
+const app = express();
+const server = http.createServer(app);
 
-server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
-server.use(morgan("dev"));
-server.use(cookieParser());
-server.use(cors());
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:5173"],
+    methods: ["GET", "POST"],
+  },
+});
+
+//socket connection configration
+socketConfig(io);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
+app.use(cookieParser());
+app.use(cors());
 
 //database connection
 connectDB();
 
 //routes setup
-server.use("/api/auth", authRoutes);
-server.use("/api/admin", adminRoutes);
-server.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/user", userRoutes);
 
 //catch not founded routes and forwards to error handler
-server.all("*", (req, res, next) => {
+app.all("*", (req, res, next) => {
   next(new AppError("Not found", 404));
 });
 
 //error handler
-server.use(errorHandler);
+app.use(errorHandler);
 
 //server connection
 const PORT = process.env.PORT || 3000;
