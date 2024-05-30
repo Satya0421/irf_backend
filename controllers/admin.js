@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
-import * as userServices from "../services/user.js";
 import AppError from "../utils/appError.js";
+import * as userServices from "../services/user.js";
 import * as adminServices from "../services/admin.js";
 import * as horseServices from "../services/horse.js";
 import * as raceServices from "../services/race.js";
@@ -224,6 +224,16 @@ const updateUserBankStatus = asyncHandler(async (req, res, next) => {
   });
 });
 
+//registered users count
+//@route GET api/admin/users/count
+const registeredUsersCount = asyncHandler(async (req, res, next) => {
+  const numberOfRegisterdUsers = await userServices.registeredUsersCount();
+  res.status(200).json({
+    status: "success",
+    numberOfRegisterdUsers,
+  });
+});
+
 export {
   getAllUsers,
   changeUserStatus,
@@ -235,4 +245,5 @@ export {
   getTournamentInformation,
   findUserDetails,
   updateUserBankStatus,
+  registeredUsersCount,
 };

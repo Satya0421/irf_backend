@@ -47,6 +47,8 @@ const deleteBankDetailsId = async (id) =>
 const findUserWithBankDetails = async (id) =>
   await User.findById(id).populate({ path: "bankDetails" });
 
+const registeredUsersCount = async () => await User.countDocuments({ isProfileCompleted: true });
+
 export {
   registerPhone,
   findUserByPhone,
@@ -63,4 +65,5 @@ export {
   updateBankDetailsId,
   deleteBankDetailsId,
   findUserWithBankDetails,
+  registeredUsersCount,
 };

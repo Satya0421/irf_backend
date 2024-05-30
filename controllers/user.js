@@ -196,12 +196,14 @@ const addParticipantsToTournament = asyncHandler(async (req, res, next) => {
   if (!tournament) {
     throw new AppError("Tournament not found", 404);
   }
-
   const isAlreadyParticipant = tournament?.participants.some((participant) =>
     participant.equals(userId)
   );
   if (isAlreadyParticipant) {
     throw new AppError("User is already a participant in this tournament", 409);
+  }
+  if (tournament?.numberOfParticipants === tournament?.participants.length) {
+    throw new AppError("The tournament has reached its maximum number of participants.", 409);
   }
 
   await tournamentServices.addParticipantToTournament(tournamentId, userId);
