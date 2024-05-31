@@ -20,6 +20,6 @@ router.get("/tournaments/:date", adminAuth, adminController.getTournaments);
 router.get("/tournament/data/:id", adminAuth, adminController.getTournamentInformation);
 router.get("/user/:id", adminAuth, adminController.findUserDetails);
 router.patch("/user/bank/:bankId/status", adminAuth, adminController.updateUserBankStatus);
-router.get("/users/count", adminAuth, adminController.registeredUsersCount);
+router.get("/dashboard/user/data", adminAuth, adminController.getDashBoardDatasForUsers);
 
 export default router;

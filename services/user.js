@@ -49,6 +49,29 @@ const findUserWithBankDetails = async (id) =>
 
 const registeredUsersCount = async () => await User.countDocuments({ isProfileCompleted: true });
 
+const addNewFieldInUser = async () => await User.updateMany({}, { $set: { wallet: 0 } });
+
+const getUsersStatistics = async () =>
+  await User.aggregate([
+    { $match: { isProfileCompleted: true } },
+    {
+      $group: {
+        _id: null,
+        totalUsers: { $sum: 1 },
+        activeUsers: {
+          $sum: {
+            $cond: [{ $eq: ["$isBlocked", false] }, 1, 0],
+          },
+        },
+        blockedUsers: {
+          $sum: {
+            $cond: [{ $eq: ["$isBlocked", true] }, 1, 0],
+          },
+        },
+      },
+    },
+  ]);
+
 export {
   registerPhone,
   findUserByPhone,
@@ -66,4 +89,6 @@ export {
   deleteBankDetailsId,
   findUserWithBankDetails,
   registeredUsersCount,
+  addNewFieldInUser,
+  getUsersStatistics,
 };

@@ -52,6 +52,10 @@ const userSchema = new Schema(
     kycDetails: {
       type: Schema.Types.ObjectId,
     },
+    wallet: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

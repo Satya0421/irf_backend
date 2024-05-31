@@ -226,11 +226,15 @@ const updateUserBankStatus = asyncHandler(async (req, res, next) => {
 
 //registered users count
 //@route GET api/admin/users/count
-const registeredUsersCount = asyncHandler(async (req, res, next) => {
-  const numberOfRegisterdUsers = await userServices.registeredUsersCount();
+const getDashBoardDatasForUsers = asyncHandler(async (req, res, next) => {
+  const userstatus = await userServices.getUsersStatistics();
+  if (!userstatus) {
+    throw new AppError("User status not found", 400);
+  }
+  const userStatistics = userstatus[0];
   res.status(200).json({
     status: "success",
-    numberOfRegisterdUsers,
+    userStatistics,
   });
 });
 
@@ -245,5 +249,5 @@ export {
   getTournamentInformation,
   findUserDetails,
   updateUserBankStatus,
-  registeredUsersCount,
+  getDashBoardDatasForUsers,
 };

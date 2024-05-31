@@ -108,7 +108,7 @@ const getBankDetails = asyncHandler(async (req, res, next) => {
   }
 
   const user = await userServices.findUserById(userId);
-  console.log(userId);
+
   if (!user) {
     throw new AppError("user not found", 404);
   }
@@ -185,6 +185,7 @@ const findRaceAvailableDates = asyncHandler(async (req, res, next) => {
 const addParticipantsToTournament = asyncHandler(async (req, res, next) => {
   let { tournamentId } = req.params;
   const userId = req.userId;
+
   if (!tournamentId || !userId) {
     throw new AppError("Invalid request: tournamentId and userId are required", 400);
   }
@@ -194,14 +195,29 @@ const addParticipantsToTournament = asyncHandler(async (req, res, next) => {
 
   const tournament = await tournamentServices.findTournamentById(tournamentId);
   if (!tournament) {
-    throw new AppError("Tournament not found", 404);
+    throw new AppError("Tournament not found or Expired", 404);
   }
+
   const isAlreadyParticipant = tournament?.participants.some((participant) =>
     participant.equals(userId)
   );
+
   if (isAlreadyParticipant) {
     throw new AppError("User is already a participant in this tournament", 409);
   }
+
+  const user = await userServices.findUserById(userId);
+  if (!user) {
+    throw new AppError("User not found", 400);
+  }
+
+  if (user.wallet < tournament.entryFee) {
+    throw new AppError(
+      "you don't have enough money in your wallet to participate in this tournament",
+      400
+    );
+  }
+
   if (tournament?.numberOfParticipants === tournament?.participants.length) {
     throw new AppError("The tournament has reached its maximum number of participants.", 409);
   }
