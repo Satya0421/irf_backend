@@ -4,8 +4,6 @@ import AppError from "./appError.js";
 //Middleware to authenticate users
 const authenticateUser = (socket, next) => {
   const token = socket.handshake.query?.token;
-  console.log("ihdyuftd");
-  console.log(token);
   if (!token) {
     console.log("token not found");
     return next(new AppError("token not found in socket", 401));
