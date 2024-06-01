@@ -141,10 +141,18 @@ const getBankDetails = asyncHandler(async (req, res, next) => {
 //getTournamentDetails
 //@route GET api/user/tournaments
 const getUpcomingTournaments = asyncHandler(async (req, res, next) => {
+  const userId = req.userId;
+  if (!userId) {
+    throw new AppError("user not found", 400);
+  }
   const tournaments = await tournamentServices.findUpcomingTournaments();
   const updatedTournaments = tournaments.map((tournament) => {
     const { name, ...rest } = tournament._doc;
-    return { ...rest, tournamentName: name };
+    const isTournamnetRegistered = tournament._doc?.participants.some(
+      (tournm) => tournm.participant === userId
+    );
+    console.log(isTournamnetRegistered);
+    return { ...rest, tournamentName: name, isTournamnetRegistered };
   });
   res.status(200).json({
     status: "success",
