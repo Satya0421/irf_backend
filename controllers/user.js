@@ -151,7 +151,6 @@ const getUpcomingTournaments = asyncHandler(async (req, res, next) => {
     const isTournamentRegistered = tournament._doc?.participants.some(
       (tournm) => tournm.participant === userId
     );
-    console.log(isTournamnetRegistered);
     return { ...rest, tournamentName: name, isTournamentRegistered };
   });
   res.status(200).json({
