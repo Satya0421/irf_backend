@@ -148,11 +148,11 @@ const getUpcomingTournaments = asyncHandler(async (req, res, next) => {
   const tournaments = await tournamentServices.findUpcomingTournaments();
   const updatedTournaments = tournaments.map((tournament) => {
     const { name, ...rest } = tournament._doc;
-    const isTournamnetRegistered = tournament._doc?.participants.some(
+    const isTournamentRegistered = tournament._doc?.participants.some(
       (tournm) => tournm.participant === userId
     );
     console.log(isTournamnetRegistered);
-    return { ...rest, tournamentName: name, isTournamnetRegistered };
+    return { ...rest, tournamentName: name, isTournamentRegistered };
   });
   res.status(200).json({
     status: "success",
