@@ -149,7 +149,7 @@ const getUpcomingTournaments = asyncHandler(async (req, res, next) => {
   const updatedTournaments = tournaments.map((tournament) => {
     const { name, ...rest } = tournament._doc;
     const isTournamentRegistered = tournament._doc?.participants.some(
-      (tournm) => tournm.participant === userId
+      (tournm) => tournm.toString() === userId.toString()
     );
     return { ...rest, tournamentName: name, isTournamentRegistered };
   });
