@@ -226,15 +226,19 @@ const updateUserBankStatus = asyncHandler(async (req, res, next) => {
 
 //registered users count
 //@route GET api/admin/users/count
-const getDashBoardDatasForUsers = asyncHandler(async (req, res, next) => {
+const getDashBoardDatas = asyncHandler(async (req, res, next) => {
   const userstatus = await userServices.getUsersStatistics();
+  const tournamentStatus = await tournamentServices.getTournamentStatistics();
+  const raceStatus = await raceServices.getRaceStatistics();
   if (!userstatus) {
     throw new AppError("User status not found", 400);
   }
-  const userStatistics = userstatus[0];
+
   res.status(200).json({
     status: "success",
-    userStatistics,
+    userStatistics: userstatus[0],
+    tournamentStatistics: tournamentStatus[0],
+    raceStatistics: raceStatus[0],
   });
 });
 
@@ -249,5 +253,5 @@ export {
   getTournamentInformation,
   findUserDetails,
   updateUserBankStatus,
-  getDashBoardDatasForUsers,
+  getDashBoardDatas,
 };

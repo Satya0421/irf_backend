@@ -89,6 +89,64 @@ const addParticipantToTournament = async (tournamentId, userId) => {
   );
 };
 
+const getTournamentStatistics = async () => {
+  return await Tournament.aggregate([
+    {
+      $facet: {
+        totalTournaments: [{ $group: { _id: null, count: { $sum: 1 } } }],
+        completedTournaments: [
+          {
+            $group: {
+              _id: null,
+              count: { $sum: { $cond: [{ $lt: ["$date", new Date()] }, 1, 0] } },
+            },
+          },  
+        ],
+        upcomingTournaments: [
+          {
+            $group: {
+              _id: null,
+              count: { $sum: { $cond: [{ $gte: ["$date", new Date()] }, 1, 0] } },
+            },
+          },
+        ],
+        todaysTournaments: [
+          {
+            $group: {
+              _id: null,
+              count: {
+                $sum: {
+                  $cond: [
+                    { $and: [{ $gte: ["$date", new Date()] }, { $lt: ["$date", new Date()] }] },
+                    1,
+                    0,
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        totalTournaments: {
+          $arrayElemAt: ["$totalTournaments.count", 0],
+        },
+        completedTournaments: {
+          $arrayElemAt: ["$completedTournaments.count", 0],
+        },
+        upcomingTournaments: {
+          $arrayElemAt: ["$upcomingTournaments.count", 0],
+        },
+        todaysTournaments: {
+          $arrayElemAt: ["$todaysTournaments.count", 0],
+        },
+      },
+    },
+  ]);
+};
+
 export {
   createNewTournament,
   prepareTournamentData,
@@ -99,4 +157,5 @@ export {
   getUpcomingTournaments,
   addParticipantToTournament,
   findTournamentById,
+  getTournamentStatistics,
 };

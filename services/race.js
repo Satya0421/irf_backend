@@ -39,4 +39,66 @@ const findRaceAvailableDates = async () => {
   return dates;
 };
 
-export { addNewRace, findRacesByDate, findRaceAvailableDates };
+const getRaceStatistics = async () => {
+  return await Race.aggregate([
+    {
+      $facet: {
+        totalRaces: [{ $group: { _id: null, count: { $sum: 1 } } }],
+        completedRaces: [
+          {
+            $group: {
+              _id: null,
+              count: {
+                $sum: {
+                  $cond: [{ $lt: ["$date", new Date()] }, 1, 0],
+                },
+              },
+            },
+          },
+        ],
+        upcomingRaces: [
+          {
+            $group: {
+              _id: null,
+              count: { $sum: { $cond: [{ $gte: ["$date", new Date()] }, 1, 0] } },
+            },
+          },
+        ],
+        todaysRaces: [
+          {
+            $group: {
+              _id: null,
+              count: {
+                $sum: {
+                  $cond: [
+                    { $and: [{ $gte: ["$date", new Date()] }, { $lt: ["$date", new Date()] }] },
+                    1,
+                    0,
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        totalRaces: {
+          $arrayElemAt: ["$totalRaces.count", 0],
+        },
+        completedRaces: {
+          $arrayElemAt: ["$completedRaces.count", 0],
+        },
+        upcomingRaces: {
+          $arrayElemAt: ["$upcomingRaces.count", 0],
+        },
+        todaysRaces: {
+          $arrayElemAt: ["$todaysRaces.count", 0],
+        },
+      },
+    },
+  ]);
+};
+
+export { addNewRace, findRacesByDate, findRaceAvailableDates, getRaceStatistics };
