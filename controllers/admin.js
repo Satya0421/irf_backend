@@ -230,15 +230,13 @@ const getDashBoardDatas = asyncHandler(async (req, res, next) => {
   const userstatus = await userServices.getUsersStatistics();
   const tournamentStatus = await tournamentServices.getTournamentStatistics();
   const raceStatus = await raceServices.getRaceStatistics();
-  if (!userstatus) {
-    throw new AppError("User status not found", 400);
-  }
-
+  const totalHorses = await horseServices.getTotalHorsesCount();
   res.status(200).json({
     status: "success",
     userStatistics: userstatus[0],
     tournamentStatistics: tournamentStatus[0],
     raceStatistics: raceStatus[0],
+    totalHorses,
   });
 });
 

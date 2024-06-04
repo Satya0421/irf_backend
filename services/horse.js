@@ -63,4 +63,6 @@ function validateFieldTitles(actualTitles) {
   );
 }
 
-export { isHorseExist, addNewHorse, processSheetData, validateFieldTitles };
+const getTotalHorsesCount = async () => await Horse.countDocuments();
+
+export { isHorseExist, addNewHorse, processSheetData, validateFieldTitles, getTotalHorsesCount };
