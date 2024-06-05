@@ -56,6 +56,12 @@ const socketConfig = (io) => {
     }
   };
 
+  // Function to emit user count to all admins
+  const emitUserCountToAdmins = () => {
+    const userCount = getRoomMemberCount("/", "userRoom");
+    io.of("/admin").to("adminRoom").emit("userCount", userCount);
+  };
+
   //handle connections for the users
   io.use(authenticateUser).on("connection", (socket) => {
     console.log("Common user connected");
@@ -63,11 +69,13 @@ const socketConfig = (io) => {
     socket.join("userRoom");
     const userCount = getRoomMemberCount("/", "userRoom");
     io.to("userRoom").emit("userCount", userCount);
+    emitUserCountToAdmins();
 
     socket.on("disconnect", () => {
       socket.leave("userRoom");
       const userCount = getRoomMemberCount("/", "userRoom");
       io.to("userRoom").emit("userCount", userCount);
+      emitUserCountToAdmins();
       console.log("user disconnected");
     });
   });
