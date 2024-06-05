@@ -1,6 +1,6 @@
 import Tournament from "../models/tournamentModel.js";
 import AppError from "../utils/appError.js";
-import { convertDateTime } from "./services.js";
+import { convertDateTime, getCurrentDate } from "./services.js";
 
 function prepareTournamentData(datas) {
   const races = [];
@@ -90,6 +90,7 @@ const addParticipantToTournament = async (tournamentId, userId) => {
 };
 
 const getTournamentStatistics = async () => {
+  const currentDate = getCurrentDate();
   return await Tournament.aggregate([
     {
       $facet: {
@@ -98,15 +99,15 @@ const getTournamentStatistics = async () => {
           {
             $group: {
               _id: null,
-              count: { $sum: { $cond: [{ $lt: ["$date", new Date()] }, 1, 0] } },
+              count: { $sum: { $cond: [{ $lt: ["$date", new Date(currentDate)] }, 1, 0] } },
             },
-          },  
+          },
         ],
         upcomingTournaments: [
           {
             $group: {
               _id: null,
-              count: { $sum: { $cond: [{ $gte: ["$date", new Date()] }, 1, 0] } },
+              count: { $sum: { $cond: [{ $gt: ["$date", new Date(currentDate)] }, 1, 0] } },
             },
           },
         ],
@@ -117,7 +118,19 @@ const getTournamentStatistics = async () => {
               count: {
                 $sum: {
                   $cond: [
-                    { $and: [{ $gte: ["$date", new Date()] }, { $lt: ["$date", new Date()] }] },
+                    {
+                      $and: [
+                        { $gte: ["$date", new Date(currentDate)] },
+                        {
+                          $lt: [
+                            "$date",
+                            new Date(
+                              new Date(currentDate).setDate(new Date(currentDate).getDate() + 1)
+                            ),
+                          ],
+                        },
+                      ],
+                    },
                     1,
                     0,
                   ],

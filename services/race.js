@@ -1,4 +1,5 @@
 import Race from "../models/raceModel.js";
+import { getCurrentDate } from "./services.js";
 
 const addNewRace = async (horses, date) => await Race.create({ date: date, horses });
 
@@ -40,62 +41,42 @@ const findRaceAvailableDates = async () => {
 };
 
 const getRaceStatistics = async () => {
+  const currentDate = getCurrentDate();
   return await Race.aggregate([
     {
       $facet: {
-        totalRaces: [{ $group: { _id: null, count: { $sum: 1 } } }],
+        totalRaces: [{ $count: "count" }],
         completedRaces: [
           {
-            $group: {
-              _id: null,
-              count: {
-                $sum: {
-                  $cond: [{ $lt: ["$date", new Date()] }, 1, 0],
-                },
-              },
-            },
+            $match: { date: { $lt: new Date(currentDate) } },
           },
+          { $count: "count" },
         ],
         upcomingRaces: [
           {
-            $group: {
-              _id: null,
-              count: { $sum: { $cond: [{ $gte: ["$date", new Date()] }, 1, 0] } },
-            },
+            $match: { date: { $gt: new Date(currentDate) } },
           },
+          { $count: "count" },
         ],
         todaysRaces: [
           {
-            $group: {
-              _id: null,
-              count: {
-                $sum: {
-                  $cond: [
-                    { $and: [{ $gte: ["$date", new Date()] }, { $lt: ["$date", new Date()] }] },
-                    1,
-                    0,
-                  ],
-                },
+            $match: {
+              date: {
+                $gte: new Date(currentDate),
+                $lt: new Date(new Date(currentDate).setDate(new Date(currentDate).getDate() + 1)),
               },
             },
           },
+          { $count: "count" },
         ],
       },
     },
     {
       $project: {
-        totalRaces: {
-          $arrayElemAt: ["$totalRaces.count", 0],
-        },
-        completedRaces: {
-          $arrayElemAt: ["$completedRaces.count", 0],
-        },
-        upcomingRaces: {
-          $arrayElemAt: ["$upcomingRaces.count", 0],
-        },
-        todaysRaces: {
-          $arrayElemAt: ["$todaysRaces.count", 0],
-        },
+        totalRaces: { $arrayElemAt: ["$totalRaces.count", 0] },
+        completedRaces: { $arrayElemAt: ["$completedRaces.count", 0] },
+        upcomingRaces: { $arrayElemAt: ["$upcomingRaces.count", 0] },
+        todaysRaces: { $arrayElemAt: ["$todaysRaces.count", 0] },
       },
     },
   ]);
