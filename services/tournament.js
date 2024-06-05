@@ -160,6 +160,29 @@ const getTournamentStatistics = async () => {
   ]);
 };
 
+const getTournamentsPerMonth = async () => {
+  const currentYear = new Date().getFullYear();
+  return await Tournament.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: new Date(currentYear, 0, 1),
+          $lt: new Date(currentYear + 1, 0, 1),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { month: { $month: "$createdAt" } },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { "_id.month": 1 },
+    },
+  ]);
+};
+
 export {
   createNewTournament,
   prepareTournamentData,
@@ -171,4 +194,5 @@ export {
   addParticipantToTournament,
   findTournamentById,
   getTournamentStatistics,
+  getTournamentsPerMonth,
 };

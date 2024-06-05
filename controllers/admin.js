@@ -231,12 +231,19 @@ const getDashBoardDatas = asyncHandler(async (req, res, next) => {
   const tournamentStatus = await tournamentServices.getTournamentStatistics();
   const raceStatus = await raceServices.getRaceStatistics();
   const totalHorses = await horseServices.getTotalHorsesCount();
+  const usersPerMonth = await userServices.getUsersPerMonth();
+  const racesPerMonth = await raceServices.getRacesPerMonth();
+  const tournamentsPerMonth = await tournamentServices.getTournamentsPerMonth();
+
   res.status(200).json({
     status: "success",
     userStatistics: userstatus[0],
     tournamentStatistics: tournamentStatus[0],
     raceStatistics: raceStatus[0],
     totalHorses,
+    usersPerMonth,
+    racesPerMonth,
+    tournamentsPerMonth,
   });
 });
 
