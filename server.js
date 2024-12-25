@@ -13,7 +13,6 @@ import userRoutes from "./routes/user.js";
 import http from "http";
 import { Server } from "socket.io";
 import socketConfig from "./utils/socket.js";
-
 dotenv.config();
 
 const app = express();
